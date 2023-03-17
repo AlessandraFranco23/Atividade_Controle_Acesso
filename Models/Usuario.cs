@@ -1,18 +1,34 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 namespace Models
 {
-    sealed class Usuario
+    [Table("usuarios")]
+    public class Usuario
     {
-        private Int32 id;
-        private String nome;
-        private String email;
-        private String senha;
+        [Column("id")]
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int Id;
 
-        private Usuario(int id, string nome, string email, string senha)
+        [Column("nome")]
+        public String Nome;
+
+        [Column("email")]
+        public String Email;
+
+        [Column("senha")]
+        public String Senha;
+
+        [Column("perfil")]
+        public Perfil Perfil;
+
+        public Usuario(string nome, string email, string senha, Perfil perfil)
         {
-            this.id = id;
-            this.nome = nome;
-            this.email = email;
-            this.senha = senha;
+            Nome = nome;
+            Email = email;
+            Senha = senha;
+            Perfil = perfil;
         }
     }
 }
