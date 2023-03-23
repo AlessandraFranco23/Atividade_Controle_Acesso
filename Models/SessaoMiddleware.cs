@@ -16,7 +16,7 @@ namespace Models
             if (Sessao.EstaLogado(email)) {
                 return _nextHandler.Handle(request, email);
             }
-            return null;
+             throw new System.Exception("Usuario não está logado");
         }     
     }
     class UsuarioAdmin : Infra.AbstractHandler
@@ -33,7 +33,8 @@ namespace Models
             if (Sessao.UsuarioPerfil(email, Perfil.ADMIN)) {
                 _nextHandler.Handle(request, email);
             }
-            return null;
+            
+            throw new System.Exception("Opção invalida para o perfil");
         }     
     }
 

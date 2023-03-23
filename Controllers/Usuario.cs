@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
@@ -25,23 +26,26 @@ namespace Controllers
         public void Alterar(int id, string nome, string email, string senha, Perfil perfil)
         {
             Models.Usuario usuario = Context.Usuarios.Where(usuario => usuario.Id.Equals(id)).FirstOrDefault();
-            if (usuario != null)
-            {
-                usuario.Nome = nome;
-                usuario.Email = email;
-                usuario.Senha = senha;
-                usuario.Perfil = perfil;
-                Context.SaveChanges();
-            }
+
+            if (usuario == null)
+                throw new Exception("Usuario não encontrado");
+
+            usuario.Nome = nome;
+            usuario.Email = email;
+            usuario.Senha = senha;
+            usuario.Perfil = perfil;
+            Context.SaveChanges();
+
         }
 
         public void Excluir(int id)
         {
             Models.Usuario usuario = Context.Usuarios.Where(usuario => usuario.Id.Equals(id)).FirstOrDefault();
-            if (usuario != null)
-            {
-                Context.Remove(usuario);
-            }
+
+            if (usuario == null)
+                throw new Exception("Usuario não encontrado");
+
+            Context.Remove(usuario);
         }
 
         public List<Models.Usuario> Listar()
@@ -54,11 +58,15 @@ namespace Controllers
             return Context.Usuarios.Where(usuario => usuario.Perfil.Equals(perfil)).Count();
         }
 
-        public int TotalSessoesAtivas() {
-            return Context.Sessoes.Include(sessao => sessao.Usuario).Where(sessao => sessao.DataExpiracao == null).Count();
+        public int TotalSessoesAtivas()
+        {
+            return Context.Sessoes.Include(sessao => sessao.Usuario)
+                                  .Where(sessao => sessao.DataExpiracao == null)
+                                  .Count();
         }
-        
-        public int TotalSessoes() {
+
+        public int TotalSessoes()
+        {
             return Context.Sessoes.Count();
         }
 

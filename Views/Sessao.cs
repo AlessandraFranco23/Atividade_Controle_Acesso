@@ -1,8 +1,9 @@
 using System;
+using Infra;
 
 namespace Views
 {
-    public class Sessao
+    public class Sessao: AbstractHandler
     {
         Controllers.Sessao Controller;
 
@@ -29,6 +30,21 @@ namespace Views
             string email = Console.ReadLine();
 
             Controller.Logout(email);
+        }
+
+        
+        public override object Handle(object request, string email)
+        {
+
+            if (request.ToString().Equals("Logar")) {
+                return Logar();
+            }
+
+            if (request.ToString().Equals("Logout")) {
+                Logout();
+            }
+
+            throw new Exception("Opcão invalida");
         }
     }
 }

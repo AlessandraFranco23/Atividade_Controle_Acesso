@@ -10,7 +10,7 @@ namespace Atividade
         {
             DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
             builder.UseMySql("Server=localhost:3306;Database=Controle;Uid=root;Pwd=root;");
-            
+
             Models.Context context = new Models.Context();
 
             Controllers.Usuario usuarioController = new Controllers.Usuario(context);
@@ -22,6 +22,13 @@ namespace Atividade
             Infra.IMiddleware usuarioEstaLogado = new Models.UsuarioEstaLogado(sessaoController);
             Infra.IMiddleware usuarioAdmin = new Models.UsuarioAdmin(sessaoController);
             Infra.IMiddleware usuarioUser = new Models.UsuarioUser(sessaoController);
+            Infra.IMiddleware errorHandlerUser = new Infra.ErrorHandler();
+            Infra.IMiddleware errorHandlerSession = new Infra.ErrorHandler();
+            errorHandlerUser.SetNext(usuarioEstaLogado)
+                            .SetNext(usuarioAdmin)
+                            .SetNext(usuarioView);
+
+            errorHandlerSession.SetNext(sessaoView);
 
             string email = "";
             int opt = 0;
@@ -40,22 +47,22 @@ namespace Atividade
                         Console.WriteLine("Saindo...");
                         break;
                     case 1:
-                        usuarioEstaLogado.SetNext(usuarioAdmin).SetNext(usuarioView).Handle("Criar", email);
+                        errorHandlerUser.Handle("Criar", email);
                         break;
                     case 2:
-                        usuarioEstaLogado.SetNext(usuarioAdmin).SetNext(usuarioView).Handle("Alterar", email);
+                       errorHandlerUser.Handle("Alterar", email);
                         break;
                     case 3:
-                        usuarioEstaLogado.SetNext(usuarioAdmin).SetNext(usuarioView).Handle("Excluir", email);
+                        errorHandlerUser.Handle("Excluir", email);
                         break;
                     case 4:
                         usuarioView.Listar();
                         break;
                     case 5:
-                        email = sessaoView.Logar();
+                        email = errorHandlerSession.Handle("Logar", email).ToString();
                         break;
                     case 6:
-                        sessaoView.Logout();
+                        errorHandlerSession.Handle("Logout", email);
                         email = "";
                         break;
                     default:

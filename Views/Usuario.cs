@@ -107,8 +107,8 @@ namespace Views
             if (request.ToString().Equals("Excluir")) {
                 Excluir();
             }
-
-            return null;
+        
+            throw new Exception("Opcão invalida");
         }
 
     }
