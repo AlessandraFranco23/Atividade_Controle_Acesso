@@ -1,3 +1,5 @@
+using System;
+
 namespace Views
 {
     public class Sessao
@@ -9,7 +11,7 @@ namespace Views
             Controller = controller;
         }
 
-        public void Logar()
+        public String Logar()
         {
             Console.WriteLine("Informe o email");
             string email = Console.ReadLine();
@@ -18,6 +20,7 @@ namespace Views
             string senha = Console.ReadLine();
 
             Controller.Login(email, senha);
+            return email;
         }
 
         public void Logout()

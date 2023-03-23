@@ -1,4 +1,5 @@
 using Infra;
+using System;
 
 namespace Views
 {
@@ -93,19 +94,22 @@ namespace Views
         }
 
         
-        public void Handle(object request)
+        public override object Handle(object request, String email)
         {
-            if (request.ToString() == "Criar") {
+            if (request.ToString().Equals("Criar")) {
                 Criar();
             }
 
-            if (request.ToString() == "Alterar") {
+            if (request.ToString().Equals("Alterar")) {
                 Alterar();
             }
 
-            if (request.ToString() == "Excluir") {
+            if (request.ToString().Equals("Excluir")) {
                 Excluir();
             }
-        }     
+
+            return null;
+        }
+
     }
 }

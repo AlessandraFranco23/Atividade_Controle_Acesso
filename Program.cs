@@ -1,3 +1,4 @@
+using System;
 using Microsoft.EntityFrameworkCore;
 
 namespace Atividade
@@ -10,7 +11,7 @@ namespace Atividade
             DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
             builder.UseMySql("Server=localhost:3306;Database=Controle;Uid=root;Pwd=root;");
             
-            Models.Context context = new Models.Context(builder.Options);
+            Models.Context context = new Models.Context();
 
             Controllers.Usuario usuarioController = new Controllers.Usuario(context);
             Controllers.Sessao sessaoController = new Controllers.Sessao(context);
@@ -51,10 +52,11 @@ namespace Atividade
                         usuarioView.Listar();
                         break;
                     case 5:
-                        sessaoView.Logar();
+                        email = sessaoView.Logar();
                         break;
                     case 6:
                         sessaoView.Logout();
+                        email = "";
                         break;
                     default:
                         Console.WriteLine("Opção inválida");

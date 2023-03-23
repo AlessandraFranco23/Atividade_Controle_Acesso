@@ -1,7 +1,7 @@
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Models;
-
+using System;
 namespace Controllers
 {
     public class Sessao
@@ -15,31 +15,39 @@ namespace Controllers
 
         public void Login(string email, string senha)
         {
-            Models.Usuario usuario = Context.Usuarios.Where(usuario => usuario.Email.Equals(email) && usuario.Senha.Equals(senha)).FirstOrDefault();
+            Models.Usuario usuario = Context.Usuarios.Where(usuariodb => usuariodb.Email == email).FirstOrDefault();
 
-            if (usuario != null) {
-                Models.Sessao sessao = new Models.Sessao(usuario, "", DateTime.Now);
-                Context.Sessoes.Add(sessao);
+            if (usuario != null)
+            {
+                if (usuario.Senha == senha)
+                {
+                    Models.Sessao sessao = new Models.Sessao(usuario, "", DateTime.Now);
+                    Context.Sessoes.Add(sessao);
 
-                Context.SaveChanges();
+                    Context.SaveChanges();
+                }
             }
         }
 
-        public void Logout(string email) {
+        public void Logout(string email)
+        {
             Models.Sessao sessao = Context.Sessoes.Include(sessao => sessao.Usuario).Where(sessao => sessao.Usuario.Email == email).FirstOrDefault();
-            if (sessao != null) {
+            if (sessao != null)
+            {
                 sessao.DataExpiracao = DateTime.Now;
 
                 Context.SaveChanges();
             }
         }
 
-         public bool UsuarioPerfil(string email, Perfil perfil) {
+        public bool UsuarioPerfil(string email, Perfil perfil)
+        {
             Models.Usuario usuario = Context.Sessoes.Include(sessao => sessao.Usuario).Where(sessao => sessao.Usuario.Email == email).Select(sessao => sessao.Usuario).FirstOrDefault();
             return perfil.Equals(usuario.Perfil);
         }
 
-        public bool EstaLogado(string email) {
+        public bool EstaLogado(string email)
+        {
             Models.Sessao sessao = Context.Sessoes.Include(sessao => sessao.Usuario)
                                                   .Where(sessao => sessao.Usuario.Email == email && sessao.DataExpiracao == null)
                                                   .FirstOrDefault();

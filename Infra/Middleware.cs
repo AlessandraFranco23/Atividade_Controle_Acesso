@@ -11,7 +11,7 @@ namespace Infra
 
     public abstract class AbstractHandler : IMiddleware
     {
-        private IMiddleware _nextHandler;
+        protected IMiddleware _nextHandler;
 
         public IMiddleware SetNext(IMiddleware handler)
         {
@@ -19,17 +19,17 @@ namespace Infra
             return handler;
         }
 
-        public virtual object Handle(object request, string email)
-        {
-            if (this._nextHandler != null)
-            {
-                return this._nextHandler.Handle(request, email);
-            }
-            else
-            {
-                return null;
-            }
-        }
+        public abstract object Handle(object request, string email);
+        // {
+            // if (this._nextHandler != null)
+            // {
+            //     return this._nextHandler.Handle(request, email);
+            // }
+            // else
+            // {
+            //     return null;
+            // }
+        // }
     }
 
 }

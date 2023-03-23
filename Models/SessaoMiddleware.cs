@@ -11,11 +11,12 @@ namespace Models
             Sessao = sessao;
         }
 
-        public void Handle(object request, string email)
+        public override object Handle(object request, string email)
         {
             if (Sessao.EstaLogado(email)) {
-                base.Handle(request, email);
+                return _nextHandler.Handle(request, email);
             }
+            return null;
         }     
     }
     class UsuarioAdmin : Infra.AbstractHandler
@@ -27,11 +28,12 @@ namespace Models
             Sessao = sessao;
         }
 
-        public void Handle(object request, string email)
+        public override object Handle(object request, string email)
         {
             if (Sessao.UsuarioPerfil(email, Perfil.ADMIN)) {
-                base.Handle(request, email);
+                _nextHandler.Handle(request, email);
             }
+            return null;
         }     
     }
 
@@ -44,11 +46,12 @@ namespace Models
             Sessao = sessao;
         }
 
-        public void Handle(object request, string email)
+        public override object Handle(object request, string email)
         {
             if (Sessao.UsuarioPerfil(email, Perfil.USER)) {
-                base.Handle(request, email);
+                _nextHandler.Handle(request, email);
             }
+            return null;
         }     
     }
 }
